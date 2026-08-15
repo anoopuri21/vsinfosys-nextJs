@@ -1,0 +1,4 @@
+# Prototype environment: prevent accidental indexation.
+# Replace this file at production launch after the final domain is confirmed.
+User-agent: *
+Disallow: /
