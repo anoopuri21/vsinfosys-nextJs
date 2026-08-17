@@ -1,9 +1,88 @@
-'use client';
-import Link from 'next/link';
-import { useState } from 'react';
-import { industries, services } from '@/lib/site-data';
+"use client";
+import Link from "next/link";
+import { useState } from "react";
+import { industries, services } from "@/lib/site-data";
 
-export function SiteHeader(){
- const [open,setOpen]=useState(false); const [mobile,setMobile]=useState(false);
- return <header className="header"><Link href="/" className="logo">VS infosys<span>.</span></Link><nav className="nav" aria-label="Primary navigation"><button type="button" onClick={()=>setOpen(!open)} aria-expanded={open} aria-controls="service-menu">Services <i>⌄</i></button><Link href="/industries/">Industries</Link><Link href="/technologies/">Technology</Link><Link href="/insights/">Insights</Link><Link href="/contact/">Contact</Link>{open&&<div id="service-menu" className="mega"><div><p>What we build</p><h2>Digital systems with a <em>clearer next move.</em></h2><Link href="/services/">Explore every service ↗</Link></div><section>{services.map(s=><Link href={`/services/${s.slug}/`} key={s.slug} onClick={()=>setOpen(false)}><strong>{s.title}</strong><span>{s.summary}</span></Link>)}</section><section>{industries.slice(0,3).map(i=><Link href={`/industries/${i.slug}/`} key={i.slug} onClick={()=>setOpen(false)}><strong>For {i.title}</strong><span>{i.problems[0]}</span></Link>)}</section></div>}</nav><div className="actions"><Link href="/start-a-project/" className="button">Start a project <span>↗</span></Link><button className="mobile" onClick={()=>setMobile(!mobile)} aria-expanded={mobile} aria-label="Toggle navigation">☰</button></div>{mobile&&<nav className="mobileNav"><Link href="/services/">Services</Link><Link href="/industries/">Industries</Link><Link href="/technologies/">Technology</Link><Link href="/insights/">Insights</Link><Link href="/contact/">Contact</Link><Link href="/start-a-project/">Start a project ↗</Link></nav>}</header>
+export function SiteHeader() {
+  const [open, setOpen] = useState(false);
+  const [mobile, setMobile] = useState(false);
+  return (
+    <header className="header">
+      <Link href="/" className="logo">
+        VS infosys<span>.</span>
+      </Link>
+      <nav className="nav" aria-label="Primary navigation">
+        <button
+          type="button"
+          onClick={() => setOpen(!open)}
+          aria-expanded={open}
+          aria-controls="service-menu"
+        >
+          Services <i>⌄</i>
+        </button>
+        <Link href="/industries/">Industries</Link>
+        <Link href="/technologies/">Technology</Link>
+        <Link href="/insights/">Insights</Link>
+        <Link href="/contact/">Contact</Link>
+        {open && (
+          <div id="service-menu" className="mega">
+            <div>
+              <p>What we build</p>
+              <h2>
+                Digital systems with a <em>clearer next move.</em>
+              </h2>
+              <Link href="/services/">Explore every service ↗</Link>
+            </div>
+            <section>
+              {services.map((s) => (
+                <Link
+                  href={`/services/${s.slug}/`}
+                  key={s.slug}
+                  onClick={() => setOpen(false)}
+                >
+                  <strong>{s.title}</strong>
+                  <span>{s.summary}</span>
+                </Link>
+              ))}
+            </section>
+            <section>
+              {industries.slice(0, 3).map((i) => (
+                <Link
+                  href={`/industries/${i.slug}/`}
+                  key={i.slug}
+                  onClick={() => setOpen(false)}
+                >
+                  <strong>For {i.title}</strong>
+                  <span>{i.problems[0]}</span>
+                </Link>
+              ))}
+            </section>
+          </div>
+        )}
+      </nav>
+      <div className="actions">
+        <Link href="/start-a-project/" className="button">
+          Start a project <span>↗</span>
+        </Link>
+        <button
+          className="mobile"
+          onClick={() => setMobile(!mobile)}
+          aria-expanded={mobile}
+          aria-label="Toggle navigation"
+        >
+          ☰
+        </button>
+      </div>
+      {mobile && (
+        <nav className="mobileNav">
+          <Link href="/services/">Services</Link>
+          <Link href="/industries/">Industries</Link>
+          <Link href="/technologies/">Technology</Link>
+          <Link href="/insights/">Insights</Link>
+          <Link href="/contact/">Contact</Link>
+          <Link href="/start-a-project/">Start a project ↗</Link>
+        </nav>
+      )}
+    </header>
+  );
 }

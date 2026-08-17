@@ -1,3 +1,75 @@
-import type { Metadata } from 'next'; import Link from 'next/link'; import { notFound } from 'next/navigation'; import { SiteFooter } from '@/components/site-footer'; import { SiteHeader } from '@/components/site-header'; import { findDetail, industries, services } from '@/lib/site-data';
-export function generateStaticParams(){return industries.map(({slug})=>({slug}))} export function generateMetadata({params}:{params:Promise<{slug:string}>}):Promise<Metadata>{return params.then(({slug})=>{const i=findDetail(industries,slug);return i?{title:`Digital solutions for ${i.title}`,description:i.summary,alternates:{canonical:`/industries/${i.slug}/`}}:{}})}
-export default async function Industry({params}:{params:Promise<{slug:string}>}){const i=findDetail(industries,(await params).slug);if(!i)notFound();return <><SiteHeader/><main className="detail"><section className="detailHero industryHero"><div className="shell"><p className="eyebrow">{i.eyebrow}</p><h1>Digital systems for <em>{i.title}.</em></h1><p>{i.summary}</p><Link className="button primary" href="/start-a-project/">Explore a project fit ↗</Link></div></section><section className="shell detailGrid"><div><p className="eyebrow">Industry needs</p><h2>Useful technology begins with the real journey.</h2></div><ul>{i.problems.map(x=><li key={x}>{x}</li>)}</ul></section><section className="shell related"><p className="eyebrow">Relevant capabilities</p><div>{services.map(s=><Link href={`/services/${s.slug}/`} key={s.slug}><h3>{s.title}</h3><span>Explore ↗</span></Link>)}</div></section></main><SiteFooter/></>}
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader } from "@/components/site-header";
+import { findDetail, industries, services } from "@/lib/site-data";
+export function generateStaticParams() {
+  return industries.map(({ slug }) => ({ slug }));
+}
+export function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  return params.then(({ slug }) => {
+    const i = findDetail(industries, slug);
+    return i
+      ? {
+          title: `Digital solutions for ${i.title}`,
+          description: i.summary,
+          alternates: { canonical: `/industries/${i.slug}/` },
+        }
+      : {};
+  });
+}
+export default async function Industry({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const i = findDetail(industries, (await params).slug);
+  if (!i) notFound();
+  return (
+    <>
+      <SiteHeader />
+      <main className="detail">
+        <section className="detailHero industryHero">
+          <div className="shell">
+            <p className="eyebrow">{i.eyebrow}</p>
+            <h1>
+              Digital systems for <em>{i.title}.</em>
+            </h1>
+            <p>{i.summary}</p>
+            <Link className="button primary" href="/start-a-project/">
+              Explore a project fit ↗
+            </Link>
+          </div>
+        </section>
+        <section className="shell detailGrid">
+          <div>
+            <p className="eyebrow">Industry needs</p>
+            <h2>Useful technology begins with the real journey.</h2>
+          </div>
+          <ul>
+            {i.problems.map((x) => (
+              <li key={x}>{x}</li>
+            ))}
+          </ul>
+        </section>
+        <section className="shell related">
+          <p className="eyebrow">Relevant capabilities</p>
+          <div>
+            {services.map((s) => (
+              <Link href={`/services/${s.slug}/`} key={s.slug}>
+                <h3>{s.title}</h3>
+                <span>Explore ↗</span>
+              </Link>
+            ))}
+          </div>
+        </section>
+      </main>
+      <SiteFooter />
+    </>
+  );
+}
