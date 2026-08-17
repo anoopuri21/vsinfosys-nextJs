@@ -311,6 +311,15 @@ export default {
         ).all();
         return json(rows.results);
       }
+      if (request.method === "GET" && url.pathname === "/v1/admin/enquiries") {
+        const user = await actor(request, env);
+        if (!user) return json({ error: "Unauthorized admin request." }, { status: 401 });
+        const status = url.searchParams.get("status");
+        const rows = status && ["new", "reviewed", "closed", "spam"].includes(status)
+          ? await env.DB.prepare("SELECT id,name,email,company,service_interest,message,status,created_at FROM enquiries WHERE status=? ORDER BY created_at DESC LIMIT 100").bind(status).all()
+          : await env.DB.prepare("SELECT id,name,email,company,service_interest,message,status,created_at FROM enquiries ORDER BY created_at DESC LIMIT 100").all();
+        return json(rows.results, { headers: { "cache-control": "no-store" } });
+      }
       const revisions = url.pathname.match(
         /^\/v1\/admin\/content\/([0-9a-f-]+)\/revisions$/,
       );
@@ -327,6 +336,17 @@ export default {
           .bind(revisions[1])
           .all();
         return json(rows.results);
+      }
+      const enquiryStatus = url.pathname.match(/^\/v1\/admin\/enquiries\/([0-9a-f-]+)$/);
+      if (request.method === "PATCH" && enquiryStatus) {
+        const user = await actor(request, env);
+        if (!user) return json({ error: "Unauthorized admin request." }, { status: 401 });
+        const body = await request.json() as { status?: string };
+        if (!body.status || !["new", "reviewed", "closed", "spam"].includes(body.status)) return json({ error: "Invalid enquiry status." }, { status: 400 });
+        const result = await env.DB.prepare("UPDATE enquiries SET status=? WHERE id=?").bind(body.status, enquiryStatus[1]).run();
+        if (!result.meta.changes) return json({ error: "Enquiry not found." }, { status: 404 });
+        await env.DB.prepare("INSERT INTO audit_events (id,actor,action,entity_type,entity_id,metadata_json) VALUES (?,?,?,?,?,?)").bind(id(), user, "enquiry.status_updated", "enquiry", enquiryStatus[1], JSON.stringify({ status: body.status })).run();
+        return json({ id: enquiryStatus[1], status: body.status });
       }
       if (request.method === "POST" && url.pathname === "/v1/admin/content")
         return saveContent(request, env);
