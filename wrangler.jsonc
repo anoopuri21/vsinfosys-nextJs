@@ -1,0 +1,11 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "vs-infosys-cms-api",
+  "main": "workers/cms-api/src/index.ts",
+  "compatibility_date": "2026-08-17",
+  "workers_dev": true,
+  "observability": { "enabled": true },
+  "d1_databases": [{ "binding": "DB", "database_name": "vsinfosys-content-prod", "database_id": "REPLACE_AFTER_D1_CREATION" }],
+  "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "vsinfosys-media-prod" }],
+  "vars": { "PUBLIC_ORIGIN": "https://vsinfosys.in" }
+}

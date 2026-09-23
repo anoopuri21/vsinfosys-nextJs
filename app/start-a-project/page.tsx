@@ -1,0 +1,34 @@
+import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader } from "@/components/site-header";
+export const metadata = { title: "Start a project" };
+export default function Start() {
+  return (
+    <>
+      <SiteHeader />
+      <main className="detail">
+        <section className="detailHero">
+          <div className="shell">
+            <p className="eyebrow">Project starter</p>
+            <h1>
+              What should work <em>better next?</em>
+            </h1>
+            <p>
+              Tell us the outcome you are trying to create. A secure,
+              CMS-managed enquiry workflow will be connected in the Cloudflare
+              backend phase.
+            </p>
+          </div>
+        </section>
+        <section className="shell formPlaceholder">
+          <p className="eyebrow">Enquiry system</p>
+          <h2>Project form coming with the secure CMS layer.</h2>
+          <p>
+            Contact details and real submission routes will be activated only
+            after they are verified.
+          </p>
+        </section>
+      </main>
+      <SiteFooter />
+    </>
+  );
+}

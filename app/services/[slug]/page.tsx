@@ -1,0 +1,98 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader } from "@/components/site-header";
+import { findDetail, services } from "@/lib/site-data";
+export function generateStaticParams() {
+  return services.map(({ slug }) => ({ slug }));
+}
+export function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  return params.then(({ slug }) => {
+    const s = findDetail(services, slug);
+    return s
+      ? {
+          title: s.title,
+          description: s.summary,
+          alternates: { canonical: `/services/${s.slug}/` },
+        }
+      : {};
+  });
+}
+export default async function Service({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const s = findDetail(services, (await params).slug);
+  if (!s) notFound();
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: s.title,
+    description: s.summary,
+    provider: { "@type": "Organization", name: "VS Infosys" },
+  };
+  return (
+    <>
+      <SiteHeader />
+      <main className="detail">
+        <section className="detailHero">
+          <div className="shell">
+            <p className="eyebrow">{s.eyebrow}</p>
+            <h1>
+              {s.title}
+              <em> with a clearer purpose.</em>
+            </h1>
+            <p>{s.summary}</p>
+            <Link className="button primary" href="/start-a-project/">
+              Discuss your project ↗
+            </Link>
+          </div>
+        </section>
+        <section className="shell detailGrid">
+          <div>
+            <p className="eyebrow">Where it helps</p>
+            <h2>Design around the decision that matters next.</h2>
+          </div>
+          <ul>
+            {s.problems.map((x) => (
+              <li key={x}>{x}</li>
+            ))}
+          </ul>
+        </section>
+        <section className="dark">
+          <div className="shell contentBlock">
+            <p className="eyebrow">Search and usability, together</p>
+            <h2>Built to be useful for people—and clear for search.</h2>
+            <p>
+              Every VS Infosys service experience starts with semantic
+              structure, accessible content, responsive interaction and a
+              measurable performance baseline. The objective is not to add
+              keywords mechanically; it is to answer the buyer&apos;s real
+              questions with clarity.
+            </p>
+          </div>
+        </section>
+        <section className="closing">
+          <p className="eyebrow">Start with the outcome</p>
+          <h2>
+            What should this system <em>make easier?</em>
+          </h2>
+          <Link className="button primary" href="/start-a-project/">
+            Start a project ↗
+          </Link>
+        </section>
+      </main>
+      <SiteFooter />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
+    </>
+  );
+}

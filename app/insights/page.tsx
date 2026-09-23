@@ -1,0 +1,54 @@
+import Link from "next/link";
+import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader } from "@/components/site-header";
+const guides = [
+  [
+    "Choosing the right platform for a growing business",
+    "A practical decision framework for websites, commerce platforms and custom applications.",
+  ],
+  [
+    "What makes an e-commerce journey easier to buy from?",
+    "The product, trust, information and interaction decisions that support a clearer route to checkout.",
+  ],
+  [
+    "Finding practical automation opportunities in a business",
+    "How to identify repeated work, define a safe first use case and keep people in control.",
+  ],
+];
+export const metadata = {
+  title: "Practical digital guides",
+  description:
+    "Practical guides from VS Infosys for making clearer website, commerce and automation decisions.",
+};
+export default function Insights() {
+  return (
+    <>
+      <SiteHeader />
+      <main className="listing">
+        <section className="detailHero">
+          <div className="shell">
+            <p className="eyebrow">Insights</p>
+            <h1>
+              Useful thinking for <em>better digital decisions.</em>
+            </h1>
+            <p>
+              Original guides will focus on the questions buyers need to answer
+              before choosing a platform, project scope or automation path.
+            </p>
+          </div>
+        </section>
+        <section className="shell insightList">
+          {guides.map(([title, copy], index) => (
+            <article key={title}>
+              <small>Guide 0{index + 1}</small>
+              <h2>{title}</h2>
+              <p>{copy}</p>
+              <span>Editorial publication workflow in progress</span>
+            </article>
+          ))}
+        </section>
+      </main>
+      <SiteFooter />
+    </>
+  );
+}
